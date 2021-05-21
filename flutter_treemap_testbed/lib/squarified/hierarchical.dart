@@ -1,0 +1,169 @@
+import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_treemap/treemap.dart';
+
+import '../main.dart';
+
+class SquarifiedHierarchicalSample extends StatefulWidget {
+  @override
+  _SquarifiedHierarchicalSampleState createState() =>
+      _SquarifiedHierarchicalSampleState();
+}
+
+class _SquarifiedHierarchicalSampleState
+    extends State<SquarifiedHierarchicalSample> {
+  late List<JobVacancyModel> _source;
+
+  @override
+  void initState() {
+    _source = <JobVacancyModel>[
+      JobVacancyModel(country: 'America', job: 'Sales', vacancy: 70),
+      JobVacancyModel(
+          country: 'America', job: 'Technical', group: 'Testers', vacancy: 35),
+      JobVacancyModel(
+          country: 'America',
+          job: 'Technical',
+          group: 'Developers',
+          role: 'Windows',
+          vacancy: 105),
+      JobVacancyModel(
+          country: 'America',
+          job: 'Technical',
+          group: 'Developers',
+          role: 'Web',
+          vacancy: 40),
+      JobVacancyModel(country: 'America', job: 'Management', vacancy: 40),
+      JobVacancyModel(country: 'America', job: 'Accounts', vacancy: 60),
+      JobVacancyModel(
+          country: 'India', job: 'Technical', group: 'Testers', vacancy: 25),
+      JobVacancyModel(
+          country: 'India',
+          job: 'Technical',
+          group: 'Developers',
+          role: 'Windows',
+          vacancy: 155),
+      JobVacancyModel(
+          country: 'India',
+          job: 'Technical',
+          group: 'Developers',
+          role: 'Web',
+          vacancy: 60),
+      JobVacancyModel(
+          country: 'Germany', job: 'Sales', group: 'Executive', vacancy: 30),
+      JobVacancyModel(
+          country: 'Germany', job: 'Sales', group: 'Analyst', vacancy: 40),
+      JobVacancyModel(
+          country: 'UK',
+          job: 'Technical',
+          group: 'Developers',
+          role: 'Windows',
+          vacancy: 100),
+      JobVacancyModel(
+          country: 'UK',
+          job: 'Technical',
+          group: 'Developers',
+          role: 'Web',
+          vacancy: 30),
+      JobVacancyModel(country: 'UK', job: 'HR Executives', vacancy: 60),
+      JobVacancyModel(country: 'UK', job: 'Marketing', vacancy: 40),
+    ];
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _source.clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final RoundedRectangleBorder border = RoundedRectangleBorder(
+      side: BorderSide(color: Theme.of(context).primaryColor, width: 1),
+    );
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Squarified Hierarchical Level'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(2.5),
+              child: SfTreemap(
+                dataCount: _source.length,
+                weightValueMapper: (int index) {
+                  return _source[index].vacancy;
+                },
+                levels: [
+                  TreemapLevel(
+                    groupMapper: (int index) => _source[index].country,
+                    labelBuilder: (BuildContext context, TreemapTile tile) {
+                      return Text(
+                        tile.group,
+                        style: TextStyle(color: getTextColor(tile.color)),
+                      );
+                    },
+                  ),
+                  TreemapLevel(
+                    border: border,
+                    groupMapper: (int index) => _source[index].job!,
+                    labelBuilder: (BuildContext context, TreemapTile tile) {
+                      return Text(
+                        tile.group,
+                        style: TextStyle(color: getTextColor(tile.color)),
+                      );
+                    },
+                  ),
+                  TreemapLevel(
+                    border: border,
+                    groupMapper: (int index) => _source[index].group,
+                    labelBuilder: (BuildContext context, TreemapTile tile) {
+                      return Text(
+                        tile.group,
+                        style: TextStyle(color: getTextColor(tile.color)),
+                      );
+                    },
+                  ),
+                  TreemapLevel(
+                    border: border,
+                    groupMapper: (int index) => _source[index].role,
+                    labelBuilder: (BuildContext context, TreemapTile tile) {
+                      return Text(
+                        tile.group,
+                        style: TextStyle(color: getTextColor(tile.color)),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          TextButton.icon(
+            onPressed: () {
+              setState(() {});
+            },
+            icon: Icon(Icons.build),
+            label: Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: Text('Rebuild'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class JobVacancyModel {
+  const JobVacancyModel(
+      {required this.country,
+      this.job,
+      this.group,
+      this.role,
+      required this.vacancy});
+  final String country;
+  final String? job;
+  final String? group;
+  final String? role;
+  final double vacancy;
+}
